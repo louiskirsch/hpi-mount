@@ -1,0 +1,41 @@
+#!/bin/bash
+
+exiterr() {
+	echo "-- $1. Exiting :("
+	exit 1
+}
+hpimount() {
+	mkdir -p ~/hpi/$2
+	sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,port=5139,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drives"
+}
+cmdexists() {
+	command -v $1 >/dev/null 2>&1
+	return $?
+}
+
+
+if ! cmdexists sshpass; then
+	if cmdexists yum; then
+		sudo yum install sshpass
+	elif cmdexists apt-get; then
+		sudo apt-get install sshpass
+	else
+		exiterr "sshpass is missing, please install manually"
+	fi
+fi
+
+read -p "Enter your HPI user name: " user
+read -p "Enter your HPI password: " -s PASSWD
+echo ""
+
+SSHPASS=$PASSWD
+export SSHPASS
+sshpass -e ssh -f -N $user@ssh-stud.hpi.uni-potsdam.de -L5139:fs23:139 -L8080:fb10lehre:80
+unset SSHPASS
+
+mkdir -p ~/hpi
+export PASSWD
+hpimount projekte$ Q
+hpimount $user$ $user
+hpimount lehrveranstaltungen materialien
+unset PASSWD
