@@ -5,7 +5,7 @@ if [ $(mount -l|grep //fs23.*hpi/|wc -l) -gt 0 ]; then
 	>&2 echo "Error: Something went wrong during unmounting"
 	exit 1;
 fi
-pkill ssh.*L139 -f
+sudo pkill ssh.*L139 -f
 if [ $(find ~/hpi -type f |wc -l) -gt 0 ]; then
 	echo "Directory hpi was not deleted because it contains files"
 else
