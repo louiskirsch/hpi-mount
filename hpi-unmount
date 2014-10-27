@@ -1,0 +1,14 @@
+#!/bin/bash
+
+exiterr() {
+	echo "-- $1. Exiting :("
+	exit 1
+}
+
+pkill ssh.*L5139 -f
+sudo umount ~/hpi/* &> /dev/null || exiterr "Could not unmount hpi drives"
+if [ $(find ~/hpi -type f |wc -l) -gt 0 ]; then
+	echo "Directory hpi was not deleted because it contains files"
+else
+	rm -R ~/hpi
+fi
