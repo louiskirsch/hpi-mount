@@ -47,10 +47,12 @@ read -p "Enter your HPI user name: " user
 read -p "Enter your HPI password: " -s PASSWD
 echo ""
 
-SSHPASS=$PASSWD
-export SSHPASS
-sudo -E sshpass -e ssh -oStrictHostKeyChecking=no -f -N $user@ssh-stud.hpi.uni-potsdam.de -L139:fs23:139 -L445:fs23:445 -L8080:fb10lehre:80
-unset SSHPASS
+if ! pgrep ssh.*L139 -f &> /dev/null; then
+	SSHPASS=$PASSWD
+	export SSHPASS
+	sudo -E sshpass -e ssh -oStrictHostKeyChecking=no -f -N $user@ssh-stud.hpi.uni-potsdam.de -L139:fs23:139 -L445:fs23:445 -L8080:fb10lehre:80
+	unset SSHPASS
+fi
 
 # Sleep one second to wait for ssh to be ready
 sleep 1
