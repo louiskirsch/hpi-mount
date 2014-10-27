@@ -8,7 +8,7 @@ exiterr() {
 }
 hpimount() {
 	mkdir -p ~/hpi/$2
-	sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,port=5139,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drive $1"
+	sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drive $1"
 }
 cmdexists() {
 	command -v $1 &>/dev/null
@@ -49,11 +49,12 @@ echo ""
 
 SSHPASS=$PASSWD
 export SSHPASS
-sshpass -e ssh -oStrictHostKeyChecking=no -f -N $user@ssh-stud.hpi.uni-potsdam.de -L5139:fs23:139 -L8080:fb10lehre:80
+sudo -E sshpass -e ssh -oStrictHostKeyChecking=no -f -N $user@ssh-stud.hpi.uni-potsdam.de -L139:fs23:139 -L445:fs23:445 -L8080:fb10lehre:80
 unset SSHPASS
 
 mkdir -p ~/hpi
 export PASSWD
+hpimount projekte$ Q
 hpimount $user$ $user
 hpimount lehrveranstaltungen materialien
 unset PASSWD
