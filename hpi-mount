@@ -52,6 +52,9 @@ export SSHPASS
 sudo -E sshpass -e ssh -oStrictHostKeyChecking=no -f -N $user@ssh-stud.hpi.uni-potsdam.de -L139:fs23:139 -L445:fs23:445 -L8080:fb10lehre:80
 unset SSHPASS
 
+# Sleep one second to wait for ssh to be ready
+sleep 1
+
 mkdir -p ~/hpi
 export PASSWD
 hpimount projekte$ Q
