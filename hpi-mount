@@ -39,7 +39,6 @@ unset SSHPASS
 
 mkdir -p ~/hpi
 export PASSWD
-hpimount projekte$ Q
 hpimount $user$ $user
 hpimount lehrveranstaltungen materialien
 unset PASSWD

@@ -1,11 +1,10 @@
 #!/bin/bash
 
-exiterr() {
-	echo "-- $1. Exiting :("
-	exit 1
-}
-
-sudo umount ~/hpi/* &> /dev/null || exiterr "Could not unmount hpi drives"
+sudo umount ~/hpi/* &> /dev/null
+if [ $(mount -l|grep //fs23.*hpi/|wc -l) -gt 0 ]; then
+	>&2 echo "Error: Something went wrong during unmounting"
+	exit 1;
+fi
 pkill ssh.*L5139 -f
 if [ $(find ~/hpi -type f |wc -l) -gt 0 ]; then
 	echo "Directory hpi was not deleted because it contains files"
