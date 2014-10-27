@@ -5,8 +5,8 @@ exiterr() {
 	exit 1
 }
 
-pkill ssh.*L5139 -f
 sudo umount ~/hpi/* &> /dev/null || exiterr "Could not unmount hpi drives"
+pkill ssh.*L5139 -f
 if [ $(find ~/hpi -type f |wc -l) -gt 0 ]; then
 	echo "Directory hpi was not deleted because it contains files"
 else
