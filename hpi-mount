@@ -15,6 +15,11 @@ cmdexists() {
 	return $?
 }
 
+if [ $(mount -l|grep //fs23.*hpi/|wc -l) -gt 0 ]; then
+	echo "Hpi drives are already mounted. Nothing to do."
+	exit 0;
+fi
+
 if ! cmdexists mount.cifs; then
 	if cmdexists yum; then
 		sudo yum install cifs-utils

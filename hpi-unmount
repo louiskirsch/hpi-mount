@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $(mount -l|grep //fs23.*hpi/|wc -l) -eq 0 ]; then
+	echo "There are no hpi drives mounted. Nothing to do."
+	exit 0;
+fi
+
 sudo umount ~/hpi/* &> /dev/null
 if [ $(mount -l|grep //fs23.*hpi/|wc -l) -gt 0 ]; then
 	>&2 echo "Error: Something went wrong during unmounting"
