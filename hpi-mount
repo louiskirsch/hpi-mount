@@ -2,14 +2,16 @@
 
 exiterr() {
 	echo "-- $1. Exiting :("
+	unset SSHPASS
+	unset PASSWD
 	exit 1
 }
 hpimount() {
 	mkdir -p ~/hpi/$2
-	sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,port=5139,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drives"
+	sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,port=5139,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drive $1"
 }
 cmdexists() {
-	command -v $1 >/dev/null 2>&1
+	command -v $1 &>/dev/null
 	return $?
 }
 
@@ -19,6 +21,8 @@ if ! cmdexists sshpass; then
 		sudo yum install sshpass
 	elif cmdexists apt-get; then
 		sudo apt-get install sshpass
+	elif cmdexists pacman; then
+		sudo pacman -S sshpass
 	else
 		exiterr "sshpass is missing, please install manually"
 	fi
