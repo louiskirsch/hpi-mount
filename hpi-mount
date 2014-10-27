@@ -15,12 +15,27 @@ cmdexists() {
 	return $?
 }
 
+if ! cmdexists mount.cifs; then
+	if cmdexists yum; then
+		sudo yum install cifs-utils
+	elif cmdexists apt-get; then
+		sudo apt-get install cifs-utils
+	elif cmdexists pacman; then
+		sudo pacman -S cifs-utils
+	else
+		exiterr "mount.cifs is missing, please install manually"
+	fi
+fi
 
 if ! cmdexists sshpass; then
 	if cmdexists yum; then
 		sudo yum install sshpass
 	elif cmdexists apt-get; then
-		sudo apt-get install sshpass
+		if ! sudo apt-get install sshpass; then
+			sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe"
+			sudo apt-get update
+			sudo apt-get install sshpass
+		fi
 	elif cmdexists pacman; then
 		sudo pacman -S sshpass
 	else
@@ -34,7 +49,7 @@ echo ""
 
 SSHPASS=$PASSWD
 export SSHPASS
-sshpass -e ssh -f -N $user@ssh-stud.hpi.uni-potsdam.de -L5139:fs23:139 -L8080:fb10lehre:80
+sshpass -e ssh -oStrictHostKeyChecking=no -f -N $user@ssh-stud.hpi.uni-potsdam.de -L5139:fs23:139 -L8080:fb10lehre:80
 unset SSHPASS
 
 mkdir -p ~/hpi
