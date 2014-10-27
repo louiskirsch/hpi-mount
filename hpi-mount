@@ -8,7 +8,11 @@ exiterr() {
 }
 hpimount() {
 	mkdir -p ~/hpi/$2
-	sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,port=5139,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drive $1"
+	if cmdexists smbmount; then
+		sudo smbmount -o username=$user,ip=127.0.0.1,port=5139,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drive $1"
+	else
+		sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,port=5139,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drive $1"
+	fi
 }
 cmdexists() {
 	command -v $1 &>/dev/null
