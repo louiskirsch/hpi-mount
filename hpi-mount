@@ -8,7 +8,7 @@ exiterr() {
 }
 hpimount() {
 	mkdir -p ~/hpi/$2
-	sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drive $1"
+	sudo -E mount -t cifs -o username=$user,ip=127.0.0.1,port=5445,workgroup=hpi //fs23/$1 ~/hpi/$2 || exiterr "Something went wrong while mounting the drive $1"
 }
 cmdexists() {
 	command -v $1 &>/dev/null
@@ -52,10 +52,10 @@ read -p "Enter your HPI user name: " user
 read -p "Enter your HPI password: " -s PASSWD
 echo ""
 
-if ! pgrep ssh.*L139 -f &> /dev/null; then
+if ! pgrep ssh.*L5445 -f &> /dev/null; then
 	SSHPASS=$PASSWD
 	export SSHPASS
-	sudo -E sshpass -e ssh -oStrictHostKeyChecking=no -oIdentitiesOnly=yes -f -N $user@ssh-stud.hpi.uni-potsdam.de -L139:fs23:139 -L445:fs23:445 -L8080:fb10lehre:80
+	sshpass -e ssh -oStrictHostKeyChecking=no -oIdentitiesOnly=yes -f -N $user@ssh-stud.hpi.uni-potsdam.de -L5445:fs23:445 -L8080:fb10lehre:80
 	unset SSHPASS
 fi
 
