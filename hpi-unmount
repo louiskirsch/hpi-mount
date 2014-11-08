@@ -5,7 +5,7 @@ if [ $(mount -l|grep //fs23.*hpi/|wc -l) -eq 0 ]; then
 	exit 0;
 fi
 
-sudo umount ~/hpi/* &> /dev/null
+sudo umount -lf ~/hpi/* &> /dev/null
 if [ $(mount -l|grep //fs23.*hpi/|wc -l) -gt 0 ]; then
 	>&2 echo "Error: Something went wrong during unmounting"
 	exit 1;
